@@ -39,6 +39,8 @@ const leaderTime = 0.25;
 export const browserSupportsWebAudio = () => !!WebAudioCtor;
 
 export default class AudioEngine {
+  _gain = 0.1;
+
   constructor({ onStep }) {
     this.onStep = onStep;
     this.position = defaultPosition;
@@ -107,6 +109,14 @@ export default class AudioEngine {
     }
   }
 
+  getGain = () => {
+    return this._gain;
+  }
+
+  setGain = gain => {
+    this._gain = gain;
+  }
+
   scheduleSounds = (position) =>  {
     if (!this.playing) return;
     this.pattern.tracks.forEach(track => {
@@ -114,7 +124,8 @@ export default class AudioEngine {
         this.soundPlayer.play({
           context: this.context,
           instrument: track.instrument,
-          timing: position.timing
+          timing: position.timing,
+          gain: this._gain
         });
       }
     });

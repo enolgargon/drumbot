@@ -10,6 +10,8 @@ export default class DrumMachine extends React.Component {
     loading: true,
     playing: false,
     startTime: 0,
+    gain: 10,
+    tempo : 100,
     position: {},
     pattern: {
       tracks: []
@@ -44,6 +46,7 @@ export default class DrumMachine extends React.Component {
   }
 
   startClock = () => {
+    this.state.tempo = this.state.pattern.beatsPerMinute;
     this.audioEngine.startClock(this.state.pattern.beatsPerMinute);
 
     this.setState({ playing: true });
@@ -68,7 +71,6 @@ export default class DrumMachine extends React.Component {
       this.stopClock();
     }
 
-
     fetch(`${apiHost}/drumbot/patterns/${pattern.name}`).then(r => r.json()).then(
       pattern => {
         this.setState({ pattern, patternIndex: index, loading: false });
@@ -83,6 +85,17 @@ export default class DrumMachine extends React.Component {
 
   previousPattern = () => {
     this.selectPattern(this.state.patternIndex - 1);
+  }
+
+  changeGain = event => {
+    this.state.gain = event.target.value;
+    this.audioEngine.setGain(this.state.gain / 100)
+  }
+
+  changeTempo = event => {
+    this.audioEngine.stopClock();
+    this.state.tempo = event.target.value;
+    this.audioEngine.startClock(this.state.tempo);
   }
 
   render() {
@@ -119,6 +132,12 @@ export default class DrumMachine extends React.Component {
           </div>
           {this.state.poweredOn && (
             <>
+              <div className='MySelector'>
+                <p>Volume</p>
+                <input type={"range"} min={"0"} max={"100"} value={this.state.gain} step={"1"} onChange={this.changeGain} />
+                <p>Tempo</p>
+                <input type={"range"} min={"60"} max={"200"} value={this.state.tempo} step={"5"} onChange={this.changeTempo} />
+              </div>
               <div className='DrumMachine__PatternSelector'>
                 <div className='DrumMachine__PatternButton'>
                   <button onClick={this.previousPattern}>&lt;</button>

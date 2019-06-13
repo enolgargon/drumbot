@@ -45,11 +45,17 @@ export default class SoundPlayer {
   play({
     context,
     instrument,
-    timing
+    timing,
+    gain
   }) {
+    gain = parseFloat(gain);
+    if (!isFinite(gain)) {
+      gain = 0.1;
+    }
+
     const player = this.instruments[instrument];
     const gainNode = context.createGain();
-    gainNode.gain.setValueAtTime(0.1, timing);
+    gainNode.gain.setValueAtTime(gain, timing);
     gainNode.connect(context.destination);
 
     if (player) player.play({context, timing, destination: gainNode});

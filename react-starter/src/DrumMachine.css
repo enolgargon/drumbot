@@ -10,6 +10,20 @@
   min-height: 600px;
 }
 
+.MySelector p {
+  font-family: 'VT323', monospace;
+  font-weight: bold;
+  color: yellow;
+  font-size: 32px;
+  text-transform: uppercase;
+  height: 40px;
+  margin: 0;
+}
+
+.MySelector input {
+  margin: 0 0 10px;
+}
+
 .DrumMachine a {
   color: white;
 }
